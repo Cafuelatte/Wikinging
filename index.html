@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アモアス役職Wikiだょん</title>
+    <style>
+        /* 全体の手書き風・シンプルなデザイン調整 */
+        body {
+            font-family: sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* ヘッダー部分 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* アコーディオンの全体（枠線） */
+        .role-container {
+            border: 3px solid #000000;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        /* タップするヘッダー部分 */
+        .role-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* 三角アイコンの動き */
+        .arrow {
+            transition: transform 0.2s;
+        }
+        .open .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* 閉じている時は非表示にする詳細コンテンツ */
+        .role-content {
+            display: none;
+            padding: 0 20px 20px 20px;
+            border-top: 2px dashed #000;
+        }
+        /* JSで .open がついたら表示する */
+        .open .role-content {
+            display: block;
+        }
+
+        /* 「せってい」の四角い枠 */
+        .setting-box {
+            border: 3px solid #000000;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ヘッダー -->
+    <div class="header">
+        <span>Wikiだょん</span>
+        <span>☰</span>
+    </div>
+
+    <!-- 役職1: シェリフ -->
+    <div class="role-container">
+        <div class="role-trigger">
+            <span>🏹 シェリフ</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="role-content">
+            <p>ここにシェリフの詳細説明の文章が入ります。波線のテキスト部分です。</p>
+            <div class="setting-box">
+                せってい
+                <p>・キルクールタイム: 25秒</p>
+                <p>・誤キル時のペナルティ: あり</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 役職2: シリアルキラー -->
+    <div class="role-container">
+        <div class="role-trigger">
+            <span>🔪 シリアルキラー</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="role-content">
+            <p>ここにシリアルキラーの詳細説明が入ります。第三陣営として単独勝利を狙う役職など。</p>
+            <div class="setting-box">
+                せってい
+                <p>・キルクールタイム: 15秒</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScriptで開閉の動きをつける -->
+    <script>
+        // すべての役職ヘッダー（role-trigger）を取得
+        const triggers = document.querySelectorAll('.role-trigger');
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                // クリックされたヘッダーの親要素（role-container）を取得
+                const container = trigger.parentElement;
+                
+                // openクラスをつけ外しする（CSSで表示/非表示が切り替わる）
+                container.classList.toggle('open');
+            });
+        });
+    </script>
+
+</body>
+</html>
