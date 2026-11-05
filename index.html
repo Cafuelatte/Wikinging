@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>アモアス役職Wiki</title>
+<title>TownOfHost-Zero 役職Wiki</title>
 <style>
 :root {
   --bg: #0b0e14;
@@ -36,8 +36,14 @@ body { margin: 0; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; back
 .site-header img { height: 32px; width: auto; display: block; }
 .site-header .wiki-label { font-size: 18px; font-weight: bold; }
 
-/* ページ最上部のタイトル（スクロールで流れる） */
-.page-title { margin: 0; padding: 20px 20px 12px; font-size: 22px; }
+/* ページ最上部の中央寄せ大見出し（スクロールで流れる） */
+.page-title {
+  margin: 0;
+  padding: 40px 20px 8px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+}
 
 /* --- 検索・フィルター --- */
 .filter-area { padding: 0 20px 16px; }
@@ -102,7 +108,7 @@ main { padding: 0 20px 20px; }
     <img src="img/toh-zero.png" alt="TOH-Zero" onerror="this.remove()">
     <span class="wiki-label">役職Wiki</span>
   </header>
-  <h1 class="page-title">TOH-Zero Role Wiki</h1>
+  <h1 class="page-title">役職一覧</h1>
 
   <div class="filter-area">
     <input type="text" class="search-input" id="search" placeholder="役職名で検索">
@@ -119,21 +125,21 @@ const ROLES = [
     id: "sheriff",
     name: "シェリフ",
     en: "Sheriff",
-    color: "#3b82f6",
+    color: "#fcdf03",
     iconEmoji: "🏹",
     badges: ["クルーメイト"],
     description: "ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。",
     abilities: [],
     settings: [
-      ["キルクールタイム", "30秒"],
-      ["誤キル時のペナルティ", "あり"]
+      ["キルクールタイム", "0/180/0.5"],
+      ["誤キル時のペナルティ", "On/Off"]
     ]
   },
   {
     id: "serial-killer",
     name: "シリアルキラー",
     en: "Serial Killer",
-    color: "#ef4444",
+    color: "#ff1919",
     iconEmoji: "🔪",
     badges: ["インポスター"],
     description: "キルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。",
@@ -251,7 +257,7 @@ function buildRole(role) {
   if (role.settings && role.settings.length) {
     const t = document.createElement("h3");
     t.className = "section-title";
-    t.textContent = "⚙️ 設定";
+    t.textContent = "設定";
     body.appendChild(t);
     const list = document.createElement("div");
     list.className = "setting-list";
@@ -273,22 +279,20 @@ function buildRole(role) {
   return details;
 }
 
-/* カードを一度だけ作って、表示/非表示だけ切り替える */
 const cards = ROLES.map(role => ({ role, el: buildRole(role) }));
 cards.forEach(c => main.appendChild(c.el));
 
-/* タグボタンを自動生成 */
 allTags.forEach(tag => {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = "tag-btn";
   btn.textContent = tag;
+  btn.dataset.tag = tag;
   btn.addEventListener("click", () => {
     activeTag = activeTag === tag ? null : tag;
     refreshTagButtons();
     applyFilter();
   });
-  btn.dataset.tag = tag;
   tagList.appendChild(btn);
 });
 
@@ -298,7 +302,6 @@ function refreshTagButtons() {
   });
 }
 
-/* タグと検索文字の両方で絞り込む */
 function applyFilter() {
   const q = searchInput.value.trim().toLowerCase();
   let shown = 0;
