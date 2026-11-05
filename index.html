@@ -90,6 +90,14 @@ main { padding: 0 20px 20px; flex: 1; }
 .badge { font-size: 12px; font-weight: bold; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--c); color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); }
 .role-description { font-size: 14px; line-height: 1.8; color: var(--sub); white-space: pre-wrap; margin: 0 0 20px; }
 .section-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: bold; margin: 0 0 12px; }
+
+/* --- 固有能力カード --- */
+.ability { background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 16px; margin-bottom: 14px; text-align: center; }
+.ability-icon { width: 84px; height: 84px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; }
+.ability-icon img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ability-name { font-size: 15px; font-weight: bold; margin-bottom: 8px; text-align: left; }
+.ability-desc { font-size: 13px; line-height: 1.7; color: var(--muted); white-space: pre-wrap; text-align: left; }
+
 .setting-list { border-left: 3px solid var(--border); padding-left: 14px; margin-left: 4px; }
 .setting-item { font-size: 14px; font-weight: bold; padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; gap: 12px; }
 .setting-item:last-child { border-bottom: none; }
@@ -135,37 +143,29 @@ main { padding: 0 20px 20px; flex: 1; }
 /* タグごとの色（新しいタグを追加したらここにも1行足す） */
 const TAG_COLORS = {
   "クルーメイト": "#3b82f6",
-  "インポスター": "#ef4444",
+  "インポスター": "#ff1919",
   "ニュートラル": "#a3a3a3"
 };
 
 const ROLES = [
   {
-    id: "sheriff",
-    name: "シェリフ",
-    en: "Sheriff",
-    color: "#3b82f6",
-    icon: "img/sheriff.png",
-    iconEmoji: "🏹",
-    badges: ["クルーメイト"],
-    description: "ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。",
-    abilities: [],
-    settings: [
-      ["キルクールタイム", "30秒"],
-      ["誤キル時のペナルティ", "あり"]
-    ]
-  },
-  {
-    id: "serial-killer",
-    name: "シリアルキラー",
-    en: "Serial Killer",
-    color: "#ef4444",
+    id: "imposter",
+    name: "いんぽすたー",
+    en: "Imposter",
+    color: "#ff1919",
+    icon: "img/imposter.png",
     iconEmoji: "🔪",
     badges: ["インポスター"],
-    description: "キルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。",
-    abilities: [],
+    description: "キルとサボタージュを使用しクルーメイトを全滅させます。",
+    abilities: [
+      {
+        name: "てすと",
+        description: "能力がないという能力(?)\nこれは仮です。",
+      }
+    ],
     settings: [
-      ["キルクールタイム", "20秒"]
+      ["テストテスト1", "0/180/0.5"],
+      ["テストテスト2", "On/Off"]
     ]
   }
   // 新しい役職は、この下に ",{ ... }" の形で追加してください
@@ -247,10 +247,40 @@ function buildRole(role) {
   desc.textContent = role.description;
   body.appendChild(desc);
 
+  if (role.abilities && role.abilities.length) {
+    const t = document.createElement("h3");
+    t.className = "section-title";
+    t.textContent = "能力";
+    body.appendChild(t);
+    role.abilities.forEach(ab => {
+      const card = document.createElement("div");
+      card.className = "ability";
+      if (ab.image) {
+        const iconBox = document.createElement("div");
+        iconBox.className = "ability-icon";
+        const img = document.createElement("img");
+        img.src = ab.image;
+        img.alt = ab.name;
+        img.onerror = () => iconBox.remove();
+        iconBox.appendChild(img);
+        card.appendChild(iconBox);
+      }
+      const abName = document.createElement("div");
+      abName.className = "ability-name";
+      abName.textContent = ab.name;
+      card.appendChild(abName);
+      const abDesc = document.createElement("div");
+      abDesc.className = "ability-desc";
+      abDesc.textContent = ab.description;
+      card.appendChild(abDesc);
+      body.appendChild(card);
+    });
+  }
+
   if (role.settings && role.settings.length) {
     const t = document.createElement("h3");
     t.className = "section-title";
-    t.textContent = "⚙️ 設定";
+    t.textContent = "設定";
     body.appendChild(t);
     const list = document.createElement("div");
     list.className = "setting-list";
