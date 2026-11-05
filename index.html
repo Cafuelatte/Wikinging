@@ -24,9 +24,8 @@
             margin-bottom: 20px;
         }
 
-        /* --- 📦 役職ごとの外枠（デフォルトはグレー） --- */
+        /* --- 📦 役職ごとの外枠（ベース設定） --- */
         .role-container {
-            border: 2px solid #222;
             border-radius: 12px;
             margin-bottom: 15px;
             overflow: hidden;
@@ -94,17 +93,21 @@
         }
 
         /* ==========================================
-           🎨 役職ごとの色（枠線・文字・区切り線を一括変更）
+           🎨 役職ごとの色（ここで四角い枠線を直接指定）
         ========================================== */
         
         /* 🏹 青：シェリフ */
-        .role-container.sheriff { border-color: #3b82f6; }
+        .role-container.sheriff { 
+            border: 2px solid #3b82f6; /* 枠線を青に */
+        }
         .role-container.sheriff .role-trigger { color: #3b82f6; }
         .role-container.sheriff .role-image { border-color: rgba(59, 130, 246, 0.3); }
         .role-container.sheriff .setting-box { border-top-color: rgba(59, 130, 246, 0.3); }
         
         /* 🔪 赤：シリアルキラー */
-        .role-container.serial-killer { border-color: #ef4444; }
+        .role-container.serial-killer { 
+            border: 2px solid #ef4444; /* 枠線を赤に */
+        }
         .role-container.serial-killer .role-trigger { color: #ef4444; }
         .role-container.serial-killer .role-image { border-color: rgba(239, 68, 68, 0.3); }
         .role-container.serial-killer .setting-box { border-top-color: rgba(239, 68, 68, 0.3); }
@@ -122,7 +125,6 @@
             <span>▼</span>
         </div>
         <div class="role-content">
-            <!-- 🖼️ 画像（imgフォルダ内の画像を指定） -->
             <div class="role-image">
                 <img src="img/sheriff.png" alt="シェリフ画像">
             </div>
@@ -146,7 +148,6 @@
             <span>▼</span>
         </div>
         <div class="role-content">
-            <!-- 🖼️ 画像 -->
             <div class="role-image">
                 <img src="img/serial_killer.png" alt="シリアルキラー画像">
             </div>
