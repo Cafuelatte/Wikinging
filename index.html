@@ -30,6 +30,7 @@
             margin-bottom: 15px;
             overflow: hidden;
             background-color: #050505;
+            transition: background-color 0.2s ease;
         }
 
         /* --- タップするヘッダー部分 --- */
@@ -42,6 +43,20 @@
             font-weight: bold;
             cursor: pointer;
             user-select: none;
+        }
+        /* ホバー時に少し背景を明るくしてクリックできることを伝える */
+        .role-trigger:hover {
+            background-color: #111111;
+        }
+
+        /* --- 🔄 矢印アニメーションの追加 --- */
+        .arrow {
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+        /* 開いたとき（.open）は矢印を180度回転させる */
+        .open .arrow {
+            transform: rotate(180deg);
         }
 
         /* --- 開く詳細部分 --- */
@@ -93,12 +108,12 @@
         }
 
         /* ==========================================
-           🎨 役職ごとの色（ここで四角い枠線を直接指定）
+           🎨 役職ごとの色
         ========================================== */
         
         /* 🏹 青：シェリフ */
         .role-container.sheriff { 
-            border: 2px solid #3b82f6; /* 枠線を青に */
+            border: 2px solid #3b82f6; 
         }
         .role-container.sheriff .role-trigger { color: #3b82f6; }
         .role-container.sheriff .role-image { border-color: rgba(59, 130, 246, 0.3); }
@@ -106,7 +121,7 @@
         
         /* 🔪 赤：シリアルキラー */
         .role-container.serial-killer { 
-            border: 2px solid #ef4444; /* 枠線を赤に */
+            border: 2px solid #ef4444; 
         }
         .role-container.serial-killer .role-trigger { color: #ef4444; }
         .role-container.serial-killer .role-image { border-color: rgba(239, 68, 68, 0.3); }
@@ -122,7 +137,7 @@
     <div class="role-container sheriff">
         <div class="role-trigger">
             <span>🏹 シェリフ</span>
-            <span>▼</span>
+            <span class="arrow">▼</span>
         </div>
         <div class="role-content">
             <div class="role-image">
@@ -145,7 +160,7 @@
     <div class="role-container serial-killer">
         <div class="role-trigger">
             <span>🔪 シリアルキラー</span>
-            <span>▼</span>
+            <span class="arrow">▼</span>
         </div>
         <div class="role-content">
             <div class="role-image">
