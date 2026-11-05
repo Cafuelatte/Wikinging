@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>アモアス役職Wiki</title>
+<title>TownOfHost-Zero  役職Wiki</title>
 <style>
 :root {
   --bg: #0b0e14;
@@ -72,7 +72,7 @@ main { padding: 0 20px 20px; }
 <div class="container">
   <header class="site-header">
     <img src="img/toh-zero.png" alt="TOH-Zero" onerror="this.remove()">
-    <span class="wiki-label">役職Wiki</span>
+    <span class="wiki-label">TownOfHost-Zero  役職Wiki</span>
   </header>
   <h1 class="page-title">TOH-Zero Role Wiki</h1>
   <main id="roles"></main>
@@ -90,8 +90,8 @@ const ROLES = [
     description: "ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。",
     abilities: [],
     settings: [
-      ["キルクールタイム", "30秒"],
-      ["誤キル時のペナルティ", "あり"]
+      ["キルクールタイム", "0/180/0.5"],
+      ["誤キル時のペナルティ", "On/Off"]
     ]
   },
   {
@@ -214,7 +214,7 @@ ROLES.forEach(role => {
   if (role.settings && role.settings.length) {
     const t = document.createElement("h3");
     t.className = "section-title";
-    t.textContent = "⚙️ 設定";
+    t.textContent = "設定";
     body.appendChild(t);
     const list = document.createElement("div");
     list.className = "setting-list";
