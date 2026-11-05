@@ -2,10 +2,231 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>テスト v4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アモアス役職Wiki</title>
+<style>
+:root {
+  --bg: #0b0e14;
+  --card: #161b26;
+  --card-2: #1c2230;
+  --border: #2a3142;
+  --text: #ffffff;
+  --sub: #c3cad6;
+  --muted: #8a93a3;
+  --title-h: 52px;
+  --bar-h: 48px;
+  --header-h: calc(var(--title-h) + var(--bar-h) + 2px);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 12px); }
+body { margin: 0; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; background: var(--bg); color: var(--text); }
+.container { max-width: 500px; margin: 0 auto; }
+.site-header { position: sticky; top: 0; z-index: 10; background: #0b0e14; border-bottom: 1px solid var(--border); }
+.title { margin: 0; height: var(--title-h); padding: 0 20px; display: flex; align-items: center; font-size: 20px; }
+.tabs { display: flex; height: var(--bar-h); border-top: 1px solid var(--border); }
+.tabs a { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: bold; }
+.tabs a:hover { background: var(--card); color: var(--text); }
+main { padding: 20px; }
+.role { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; scroll-margin-top: calc(var(--header-h) + 12px); }
+.role summary { display: flex; align-items: center; gap: 14px; padding: 16px 18px; cursor: pointer; list-style: none; }
+.role summary::-webkit-details-marker { display: none; }
+.role summary:hover { background: var(--card-2); }
+.role-icon { flex: 0 0 56px; height: 56px; border-radius: 12px; background: #000; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden; }
+.role-icon img { width: 100%; height: 100%; object-fit: contain; }
+.role-head { flex: 1; min-width: 0; }
+.role-name { margin: 0; font-size: 19px; font-weight: bold; }
+.role-en { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.role-tagline { font-size: 13px; font-style: italic; color: var(--c); margin-top: 2px; }
+.arrow { color: var(--muted); font-size: 12px; transition: transform 0.2s ease; }
+.role[open] .arrow { transform: rotate(180deg); }
+.role-body { padding: 0 18px 20px; }
+.badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.badge { font-size: 12px; font-weight: bold; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--c); color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); }
+.role-description { font-size: 14px; line-height: 1.8; color: var(--sub); white-space: pre-wrap; margin: 0 0 20px; }
+.section-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: bold; margin: 0 0 12px; }
+.ability { background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 16px; margin-bottom: 14px; text-align: center; }
+.ability-icon { width: 84px; height: 84px; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 44px; }
+.ability-icon img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ability-name { font-size: 15px; font-weight: bold; margin-bottom: 8px; text-align: left; }
+.ability-desc { font-size: 13px; line-height: 1.7; color: var(--muted); white-space: pre-wrap; text-align: left; }
+.setting-list { border-left: 3px solid var(--border); padding-left: 14px; margin-left: 4px; }
+.setting-item { font-size: 14px; font-weight: bold; padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; gap: 12px; }
+.setting-item:last-child { border-bottom: none; }
+.setting-item span.value { color: var(--c); font-weight: bold; }
+</style>
 </head>
-<body style="background:#0b0e14;color:#fff;font-size:24px;padding:20px;">
-<h1>テストページ v4</h1>
-<p>この文字が見えていれば、新しいファイルが公開されています。</p>
+<body>
+<div class="container">
+  <header class="site-header">
+    <h1 class="title">TOH-Zero Role Wiki</h1>
+    <nav class="tabs" id="tabs"></nav>
+  </header>
+  <main id="roles"></main>
+</div>
+
+<script>
+const ROLES = [
+  {
+    id: "sheriff",
+    name: "シェリフ",
+    en: "Sheriff",
+    color: "#3b82f6",
+    iconEmoji: "🏹",
+    badges: ["クルーメイト"],
+    description: "ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。",
+    abilities: [],
+    settings: [
+      ["キルクールタイム", "30秒"],
+      ["誤キル時のペナルティ", "あり"]
+    ]
+  },
+  {
+    id: "serial-killer",
+    name: "シリアルキラー",
+    en: "Serial Killer",
+    color: "#ef4444",
+    iconEmoji: "🔪",
+    badges: ["インポスター"],
+    description: "キルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。",
+    abilities: [],
+    settings: [
+      ["キルクールタイム", "20秒"]
+    ]
+  }
+  // 新しい役職は、この下に ",{ ... }" の形で追加してください
+];
+
+const tabs = document.getElementById("tabs");
+const main = document.getElementById("roles");
+
+function makeIcon(role) {
+  const box = document.createElement("div");
+  box.className = "role-icon";
+  if (role.icon) {
+    const img = document.createElement("img");
+    img.src = role.icon;
+    img.alt = role.name;
+    box.appendChild(img);
+  } else {
+    box.textContent = role.iconEmoji || "";
+  }
+  return box;
+}
+
+ROLES.forEach(role => {
+  const a = document.createElement("a");
+  a.href = "#" + role.id;
+  a.textContent = role.name;
+  tabs.appendChild(a);
+
+  const details = document.createElement("details");
+  details.className = "role";
+  details.id = role.id;
+  details.style.setProperty("--c", role.color);
+
+  const summary = document.createElement("summary");
+  summary.appendChild(makeIcon(role));
+
+  const head = document.createElement("div");
+  head.className = "role-head";
+  const name = document.createElement("p");
+  name.className = "role-name";
+  name.style.color = role.color;
+  name.textContent = role.name;
+  head.appendChild(name);
+  if (role.en) {
+    const en = document.createElement("div");
+    en.className = "role-en";
+    en.textContent = "/ " + role.en;
+    head.appendChild(en);
+  }
+  if (role.tagline) {
+    const tag = document.createElement("div");
+    tag.className = "role-tagline";
+    tag.textContent = role.tagline;
+    head.appendChild(tag);
+  }
+  summary.appendChild(head);
+
+  const arrow = document.createElement("span");
+  arrow.className = "arrow";
+  arrow.textContent = "▼";
+  summary.appendChild(arrow);
+  details.appendChild(summary);
+
+  const body = document.createElement("div");
+  body.className = "role-body";
+
+  if (role.badges && role.badges.length) {
+    const badges = document.createElement("div");
+    badges.className = "badges";
+    role.badges.forEach(text => {
+      const b = document.createElement("span");
+      b.className = "badge";
+      b.textContent = text;
+      badges.appendChild(b);
+    });
+    body.appendChild(badges);
+  }
+
+  const desc = document.createElement("p");
+  desc.className = "role-description";
+  desc.textContent = role.description;
+  body.appendChild(desc);
+
+  if (role.abilities && role.abilities.length) {
+    const t = document.createElement("h3");
+    t.className = "section-title";
+    t.textContent = "⚡ 固有能力";
+    body.appendChild(t);
+    role.abilities.forEach(ab => {
+      const card = document.createElement("div");
+      card.className = "ability";
+      if (ab.image) {
+        const iconBox = document.createElement("div");
+        iconBox.className = "ability-icon";
+        const img = document.createElement("img");
+        img.src = ab.image;
+        img.alt = ab.name;
+        iconBox.appendChild(img);
+        card.appendChild(iconBox);
+      }
+      const abName = document.createElement("div");
+      abName.className = "ability-name";
+      abName.textContent = ab.name;
+      card.appendChild(abName);
+      const abDesc = document.createElement("div");
+      abDesc.className = "ability-desc";
+      abDesc.textContent = ab.description;
+      card.appendChild(abDesc);
+      body.appendChild(card);
+    });
+  }
+
+  if (role.settings && role.settings.length) {
+    const t = document.createElement("h3");
+    t.className = "section-title";
+    t.textContent = "⚙️ 設定";
+    body.appendChild(t);
+    const list = document.createElement("div");
+    list.className = "setting-list";
+    role.settings.forEach(([label, value]) => {
+      const item = document.createElement("div");
+      item.className = "setting-item";
+      const l = document.createElement("span");
+      l.textContent = label;
+      const v = document.createElement("span");
+      v.className = "value";
+      v.textContent = value;
+      item.append(l, v);
+      list.appendChild(item);
+    });
+    body.appendChild(list);
+  }
+
+  details.appendChild(body);
+  main.appendChild(details);
+});
+</script>
 </body>
 </html>
