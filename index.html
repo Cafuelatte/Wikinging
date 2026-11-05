@@ -12,14 +12,16 @@
             --sub: #dddddd;
             --muted: #888888;
             --line: #222222;
+            --title-h: 52px;
             --bar-h: 48px;
+            --header-h: calc(var(--title-h) + var(--bar-h) + 2px);
         }
 
         * { box-sizing: border-box; }
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: calc(var(--bar-h) + 10px);
+            scroll-padding-top: calc(var(--header-h) + 10px);
         }
 
         body {
@@ -34,23 +36,28 @@
             margin: 0 auto;
         }
 
-        /* --- ページ最上部のタイトル（スクロールで消える） --- */
-        .title {
-            margin: 0;
-            padding: 20px;
-            font-size: 22px;
-            border-bottom: 2px solid var(--line);
-        }
-
-        /* --- 常に最上部に固定されるタブバー --- */
-        .tabs {
+        /* --- 常に最上部に固定されるヘッダー（タイトル＋タブ） --- */
+        .site-header {
             position: sticky;
             top: 0;
             z-index: 10;
             background: #000000;
             border-bottom: 2px solid var(--line);
+        }
+
+        .title {
+            margin: 0;
+            height: var(--title-h);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .tabs {
             display: flex;
             height: var(--bar-h);
+            border-top: 2px solid var(--line);
         }
         .tabs a {
             flex: 1;
@@ -77,10 +84,8 @@
             overflow: hidden;
             background: var(--card);
             border: 2px solid var(--c);
-            scroll-margin-top: calc(var(--bar-h) + 10px);
+            scroll-margin-top: calc(var(--header-h) + 10px);
         }
-        .role.sheriff { --c: #3b82f6; }
-        .role.serial-killer { --c: #ef4444; }
 
         .role summary {
             display: flex;
@@ -143,52 +148,119 @@
 <body>
 
     <div class="container">
-        <h1 class="title">TOH-Zero Role Wiki</h1>
+        <header class="site-header">
+            <h1 class="title">TOH-Zero Role Wiki</h1>
+            <nav class="tabs" id="tabs"></nav>
+        </header>
 
-        <nav class="tabs">
-            <a href="#sheriff">🏹 シェリフ</a>
-            <a href="#serial-killer">🔪 シリアルキラー</a>
-        </nav>
-
-        <main>
-            <details class="role sheriff" id="sheriff">
-                <summary>
-                    <span>🏹 シェリフ</span>
-                    <span class="arrow">▼</span>
-                </summary>
-                <div class="role-content">
-                    <div class="role-image">
-                        <img src="img/sheriff.png" alt="シェリフ画像">
-                    </div>
-                    <p class="role-description">ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。
-インポスター陣営をキルすることができます。
-ニュートラルをキル可能にする設定有。
-クルーメイトをキルすると自殺します。
-タスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。</p>
-                    <div class="setting-box">
-                        <div class="setting-item">キルクールタイム: <span>30秒</span></div>
-                        <div class="setting-item">誤キル時のペナルティ: <span>あり</span></div>
-                    </div>
-                </div>
-            </details>
-
-            <details class="role serial-killer" id="serial-killer">
-                <summary>
-                    <span>🔪 シリアルキラー</span>
-                    <span class="arrow">▼</span>
-                </summary>
-                <div class="role-content">
-                    <div class="role-image">
-                        <img src="img/serial_killer.png" alt="シリアルキラー画像">
-                    </div>
-                    <p class="role-description">キルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。</p>
-                    <div class="setting-box">
-                        <div class="setting-item">キルクールタイム: <span>20秒</span></div>
-                    </div>
-                </div>
-            </details>
-        </main>
+        <main id="roles"></main>
     </div>
+
+    <script>
+        /*
+         ==========================================
+         役職データ（ここに追加するだけで増えます）
+         ----------------------------------------
+         id        : 英数字・ハイフンのみ（タブのリンク先になります）
+         name      : 表示名（絵文字も可）
+         color     : カードの色
+         image     : 画像のパス（省略可）
+         description: 説明文（改行可）
+         settings  : 設定項目 [ラベル, 値] の配列
+         ==========================================
+        */
+        const ROLES = [
+            {
+                id: "sheriff",
+                name: "🏹 シェリフ",
+                color: "#3b82f6",
+                image: "img/sheriff.png",
+                description: "ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。",
+                settings: [
+                    ["キルクールタイム", "30秒"],
+                    ["誤キル時のペナルティ", "あり"]
+                ]
+            },
+            {
+                id: "serial-killer",
+                name: "🔪 シリアルキラー",
+                color: "#ef4444",
+                image: "img/serial_killer.png",
+                description: "キルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。",
+                settings: [
+                    ["キルクールタイム", "20秒"]
+                ]
+            }
+            // ↓ 新しい役職はここに追加（最後の } の後ろに , を付けて貼り付け）
+            // {
+            //     id: "example",
+            //     name: "🛡 役職名",
+            //     color: "#22c55e",
+            //     image: "img/example.png",
+            //     description: "説明文",
+            //     settings: [
+            //         ["キルクールタイム", "30秒"]
+            //     ]
+            // }
+        ];
+
+        /* ---- 以下は触らなくてOK：データからページを組み立てます ---- */
+        const tabs = document.getElementById("tabs");
+        const main = document.getElementById("roles");
+
+        ROLES.forEach(role => {
+            const a = document.createElement("a");
+            a.href = "#" + role.id;
+            a.textContent = role.name;
+            tabs.appendChild(a);
+
+            const details = document.createElement("details");
+            details.className = "role";
+            details.id = role.id;
+            details.style.setProperty("--c", role.color);
+
+            const summary = document.createElement("summary");
+            summary.innerHTML = `<span></span><span class="arrow">▼</span>`;
+            summary.firstElementChild.textContent = role.name;
+            details.appendChild(summary);
+
+            const content = document.createElement("div");
+            content.className = "role-content";
+
+            if (role.image) {
+                const imgBox = document.createElement("div");
+                imgBox.className = "role-image";
+                const img = document.createElement("img");
+                img.src = role.image;
+                img.alt = role.name + "画像";
+                imgBox.appendChild(img);
+                content.appendChild(imgBox);
+            }
+
+            const desc = document.createElement("p");
+            desc.className = "role-description";
+            desc.textContent = role.description;
+            content.appendChild(desc);
+
+            if (role.settings && role.settings.length) {
+                const box = document.createElement("div");
+                box.className = "setting-box";
+                role.settings.forEach(([label, value]) => {
+                    const item = document.createElement("div");
+                    item.className = "setting-item";
+                    item.append(label + ": ");
+                    const v = document.createElement("span");
+                    v.textContent = value;
+                    item.appendChild(v);
+                    box.appendChild(item);
+                });
+                content.appendChild(box);
+            }
+
+            details.appendChild(content);
+            main.appendChild(details);
+        });
+    </script>
 
 </body>
 </html>
