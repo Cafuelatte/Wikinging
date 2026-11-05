@@ -3,130 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>アモアス役職Wikiだょん</title>
+    <title>アモアス役職Wiki</title>
     <style>
-        /* 全体の手書き風・シンプルなデザイン調整 */
+        /* --- 基本設定（黒背景に白文字） --- */
         body {
             font-family: sans-serif;
-            background-color: #ffffff;
-            color: #000000;
+            background-color: #000000;
+            color: #ffffff;
             padding: 20px;
             max-width: 500px;
             margin: 0 auto;
         }
 
-        /* ヘッダー部分 */
+        /* --- ヘッダー --- */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
-            border-bottom: 3px solid #000;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
             margin-bottom: 20px;
         }
 
-        /* アコーディオンの全体（枠線） */
+        /* --- 各役職の枠 --- */
         .role-container {
-            border: 3px solid #000000;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            overflow: hidden;
+            border-bottom: 1px solid #222;
         }
 
-        /* タップするヘッダー部分 */
+        /* --- タップする部分 --- */
         .role-trigger {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
-            font-size: 20px;
+            padding: 15px 0;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            user-select: none;
         }
 
-        /* 三角アイコンの動き */
-        .arrow {
-            transition: transform 0.2s;
-        }
-        .open .arrow {
-            transform: rotate(180deg);
-        }
-
-        /* 閉じている時は非表示にする詳細コンテンツ */
+        /* --- 開く詳細部分 --- */
         .role-content {
             display: none;
-            padding: 0 20px 20px 20px;
-            border-top: 2px dashed #000;
+            padding-bottom: 20px;
         }
-        /* JSで .open がついたら表示する */
         .open .role-content {
             display: block;
         }
 
-        /* 「せってい」の四角い枠 */
-        .setting-box {
-            border: 3px solid #000000;
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 10px;
-            font-weight: bold;
+        /* --- 画像のサイズ --- */
+        .role-image {
+            width: 100%;
+            max-height: 200px;
+            margin-bottom: 15px;
         }
+        .role-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* --- 説明文 --- */
+        .role-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+            white-space: pre-wrap;
+            margin-bottom: 15px;
+        }
+
+        /* --- 設定項目 --- */
+        .setting-item {
+            font-size: 13px;
+            color: #888;
+            margin: 4px 0;
+        }
+        .setting-item span {
+            color: #fff;
+        }
+
+        /* ==========================================
+           🎨 役職ごとの色（名前と設定のタイトルのみ変更）
+        ========================================== */
+        
+        /* 青：シェリフ */
+        .role-container.sheriff .role-trigger { color: #3b82f6; }
+        
+        /* 赤：シリアルキラー */
+        .role-container.serial-killer .role-trigger { color: #ef4444; }
+
     </style>
 </head>
 <body>
 
-    <!-- ヘッダー -->
-    <div class="header">
-        <span>TownOfHost-Zero 役職Wiki</span>
-        <span>☰</span>
-    </div>
+    <div class="header">TOH-Zero Role Wiki</div>
 
     <!-- 役職1: シェリフ -->
-    <div class="role-container">
+    <div class="role-container sheriff">
         <div class="role-trigger">
             <span>🏹 シェリフ</span>
-            <span class="arrow">▼</span>
+            <span>▼</span>
         </div>
         <div class="role-content">
-            <p>ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。</p>
-            <div class="setting-box">
-                設定
-                <p>キルクールタイム: 30秒</p>
-                <p>誤キル時のペナルティ: あり</p>
+            <!-- 🖼️ 画像（不要ならこの3行を丸ごと消してOK） -->
+            <div class="role-image">
+                <img src="img/sheriff.png" alt="">
             </div>
+            <div class="role-description">ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。
+インポスター陣営をキルすることができます。
+ニュートラルをキル可能にする設定有。
+クルーメイトをキルすると自殺します。
+タスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。</div>
+            <div class="setting-item">キルクールタイム: <span>30秒</span></div>
+            <div class="setting-item">誤キル時のペナルティ: <span>あり</span></div>
         </div>
     </div>
 
     <!-- 役職2: シリアルキラー -->
-    <div class="role-container">
+    <div class="role-container serial-killer">
         <div class="role-trigger">
             <span>🔪 シリアルキラー</span>
-            <span class="arrow">▼</span>
+            <span>▼</span>
         </div>
         <div class="role-content">
-            <p>キルクールが他のインポスターに比べて短い反面、\n変身のクールタイムが明ける前にキルしないと自爆する</p>
-            <div class="setting-box">
-                設定
-                <p>・キルクールタイム: 20秒</p>
+            <!-- 🖼️ 画像 -->
+            <div class="role-image">
+                <img src="img/serial_killer.png" alt="">
             </div>
+            <div class="role-description">キルクールが他のインポスターに比べて短い反面、変身のクールタイムが明ける前にキルしないと自爆する。</div>
+            <div class="setting-item">キルクールタイム: <span>20秒</span></div>
         </div>
     </div>
 
-    <!-- JavaScriptで開閉の動きをつける -->
     <script>
-        // すべての役職ヘッダー（role-trigger）を取得
-        const triggers = document.querySelectorAll('.role-trigger');
-
-        triggers.forEach(trigger => {
+        document.querySelectorAll('.role-trigger').forEach(trigger => {
             trigger.addEventListener('click', () => {
-                // クリックされたヘッダーの親要素（role-container）を取得
-                const container = trigger.parentElement;
-                
-                // openクラスをつけ外しする（CSSで表示/非表示が切り替わる）
-                container.classList.toggle('open');
+                trigger.parentElement.classList.toggle('open');
             });
         });
     </script>
