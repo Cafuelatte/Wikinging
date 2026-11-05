@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TownOfHost-Zero  役職Wiki</title>
+<title>アモアス役職Wiki</title>
 <style>
 :root {
   --bg: #0b0e14;
@@ -39,6 +39,34 @@ body { margin: 0; font-family: "Hiragino Sans", "Noto Sans JP", sans-serif; back
 /* ページ最上部のタイトル（スクロールで流れる） */
 .page-title { margin: 0; padding: 20px 20px 12px; font-size: 22px; }
 
+/* --- 検索・フィルター --- */
+.filter-area { padding: 0 20px 16px; }
+.search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+}
+.search-input:focus { border-color: #3b82f6; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-btn {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tag-btn.active { color: var(--text); border-color: #3b82f6; background: #1e3a8a; }
+.empty-msg { text-align: center; color: var(--muted); font-size: 14px; padding: 30px 0; display: none; }
+
 main { padding: 0 20px 20px; }
 .role { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 16px; overflow: hidden; scroll-margin-top: calc(var(--header-h) + 12px); }
 .role summary { display: flex; align-items: center; gap: 14px; padding: 16px 18px; cursor: pointer; list-style: none; }
@@ -72,10 +100,17 @@ main { padding: 0 20px 20px; }
 <div class="container">
   <header class="site-header">
     <img src="img/toh-zero.png" alt="TOH-Zero" onerror="this.remove()">
-    <span class="wiki-label">TownOfHost-Zero  役職Wiki</span>
+    <span class="wiki-label">役職Wiki</span>
   </header>
   <h1 class="page-title">TOH-Zero Role Wiki</h1>
+
+  <div class="filter-area">
+    <input type="text" class="search-input" id="search" placeholder="役職名で検索">
+    <div class="tag-list" id="tagList"></div>
+  </div>
+
   <main id="roles"></main>
+  <p class="empty-msg" id="emptyMsg">該当する役職がありません</p>
 </div>
 
 <script>
@@ -90,8 +125,8 @@ const ROLES = [
     description: "ペットを撫でることでタスクモードとシェリフモードを切り替えることができます。\nインポスター陣営をキルすることができます。\nニュートラルをキル可能にする設定有。\nクルーメイトをキルすると自殺します。\nタスクモード中はシェリフのキル能力は使用できず、シェリフモードではタスクが行えません。",
     abilities: [],
     settings: [
-      ["キルクールタイム", "0/180/0.5"],
-      ["誤キル時のペナルティ", "On/Off"]
+      ["キルクールタイム", "30秒"],
+      ["誤キル時のペナルティ", "あり"]
     ]
   },
   {
@@ -111,6 +146,14 @@ const ROLES = [
 ];
 
 const main = document.getElementById("roles");
+const tagList = document.getElementById("tagList");
+const searchInput = document.getElementById("search");
+const emptyMsg = document.getElementById("emptyMsg");
+
+let activeTag = null;
+
+/* 全役職のバッジから重複なしのタグ一覧を作る（タグが増えたら自動で増える） */
+const allTags = [...new Set(ROLES.flatMap(r => r.badges || []))];
 
 function makeIcon(role) {
   const box = document.createElement("div");
@@ -126,7 +169,7 @@ function makeIcon(role) {
   return box;
 }
 
-ROLES.forEach(role => {
+function buildRole(role) {
   const details = document.createElement("details");
   details.className = "role";
   details.id = role.id;
@@ -147,12 +190,6 @@ ROLES.forEach(role => {
     en.className = "role-en";
     en.textContent = "/ " + role.en;
     head.appendChild(en);
-  }
-  if (role.tagline) {
-    const tag = document.createElement("div");
-    tag.className = "role-tagline";
-    tag.textContent = role.tagline;
-    head.appendChild(tag);
   }
   summary.appendChild(head);
 
@@ -214,7 +251,7 @@ ROLES.forEach(role => {
   if (role.settings && role.settings.length) {
     const t = document.createElement("h3");
     t.className = "section-title";
-    t.textContent = "設定";
+    t.textContent = "⚙️ 設定";
     body.appendChild(t);
     const list = document.createElement("div");
     list.className = "setting-list";
@@ -233,8 +270,51 @@ ROLES.forEach(role => {
   }
 
   details.appendChild(body);
-  main.appendChild(details);
+  return details;
+}
+
+/* カードを一度だけ作って、表示/非表示だけ切り替える */
+const cards = ROLES.map(role => ({ role, el: buildRole(role) }));
+cards.forEach(c => main.appendChild(c.el));
+
+/* タグボタンを自動生成 */
+allTags.forEach(tag => {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "tag-btn";
+  btn.textContent = tag;
+  btn.addEventListener("click", () => {
+    activeTag = activeTag === tag ? null : tag;
+    refreshTagButtons();
+    applyFilter();
+  });
+  btn.dataset.tag = tag;
+  tagList.appendChild(btn);
 });
+
+function refreshTagButtons() {
+  tagList.querySelectorAll(".tag-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.tag === activeTag);
+  });
+}
+
+/* タグと検索文字の両方で絞り込む */
+function applyFilter() {
+  const q = searchInput.value.trim().toLowerCase();
+  let shown = 0;
+  cards.forEach(({ role, el }) => {
+    const matchTag = !activeTag || (role.badges || []).includes(activeTag);
+    const matchText = !q ||
+      role.name.toLowerCase().includes(q) ||
+      (role.en || "").toLowerCase().includes(q);
+    const visible = matchTag && matchText;
+    el.style.display = visible ? "" : "none";
+    if (visible) shown++;
+  });
+  emptyMsg.style.display = shown === 0 ? "block" : "none";
+}
+
+searchInput.addEventListener("input", applyFilter);
 </script>
 </body>
 </html>
