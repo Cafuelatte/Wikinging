@@ -149,76 +149,35 @@ const TAG_COLORS = {
 
 const ROLES = [
   {
-    id: "imposter",
-    name: "いんぽすたー",
-    en: "Imposter",
+    id: "fennec",
+    name: "フェネック",
+    en: "Fennec",
     color: "#ff1919",
-    icon: "img/imposter.png",
-    iconEmoji: "🔪",
+    icon: "img/fennec.png",
+    iconEmoji: "🕳",
     badges: ["インポスター"],
-    description: "キルとサボタージュを使用しクルーメイトを全滅させます。",
+    description: "専用の穴を作成して移動し、最寄りのプレイヤーを探知できるインポスターです。",
     abilities: [
       {
-        name: "てすと",
-        description: "能力がないという能力(?)\nこれは仮です。",
-      }
-    ],
-    settings: [
-      ["テストテスト1", "0/180/0.5"],
-      ["テストテスト2", "On/Off"]
-    ]
-  },
-  {
-    id: "kuukyosya",
-    name: "空虚者",
-    en: "kuukyosya",
-    color: "#000000",
-    icon: "img/kuukyosya.png",
-    iconEmoji: "⚫️",
-    badges: ["ニュートラル"],
-    description: "勝つことができません。",
-  },
-  {
-    id: "colorfulmate",
-    name: "カラフルメイト",
-    en: "Colorfulmate",
-    color: "#18f345",
-    icon: "img/colorfulmate.png",
-    iconEmoji: "🌈",
-    badges: ["クルーメイト"],
-    description: "わーぴかぴか！",
-    abilities: [
-      {
-        name: "発光",
-        description: "き\nみ\nは\nに\nじ\nい\nろ\nだ",
+        name: "穴掘り",
+        description: "穴を作成します。",
       },
       {
-        name: "存在感",
-        description: "会議で毎回3票入るぞ！"
-      }
-    ],
-    settings: [
-      ["発光度合い", "0/100/5"],
-      ["色", "0/255/1"]
-    ]
-  },
-  {
-    id: "whiter",
-    name: "ホワイター",
-    en: "Whiter",
-    color: "#ffffff",
-    icon: "img/whiter.png",
-    iconEmoji: "⬜️",
-    badges: ["ニュートラル"],
-    description: "何もかもが白い！",
-    abilities: [
+        name: "穴ネットワーク",
+        description: "穴と穴でテレポートします。",
+      },
       {
-        name: "漂白",
-        description: "すべてが白くなります。",
-      }
+        name: "獲物探知",
+        description: "自身から最も近いプレイヤーの方向が\n8方向の矢印で常時表示されます。",
+      },
     ],
     settings: [
-      ["白いか", "On/Off"]
+      ["穴作成クールダウン", "0/180/0.5"],
+      ["テレポートクールダウン", "On/Off"],
+      ["他人の作成した穴を使用できる", "On/Off"],
+      ["インポスターが穴を視認できる", "On/Off"],
+      ["インポスター以外が穴を視認できる", "On/Off"],
+      ["フェネックが死亡すると穴が消える", "On/Off"],
     ]
   }
   // 新しい役職は、この下に ",{ ... }" の形で追加してください
