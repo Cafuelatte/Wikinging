@@ -198,6 +198,16 @@
       intro: "見ろ私のこの速さを"
       desc: "設定秒数ごとに自身の足がランダムな速さに変わります。"
       options: ["速度変化秒数","速度変化最小倍率", "速度変化最大倍率"]
+    },
+    {
+      name: "マッドアンノウン"
+      en: "Mad Unknown"
+      team: "マッドメイト"
+      color: "#ff1919"
+      tags: ["マッドメイト"]
+      intro: "さあ、正体不明の怪奇に怯えるがいい"
+      desc: "キルボタンを押す事で対象にインポスター陣営にしか見えないマークをつけることができ、\nファントムボタンを押すことでマークのついてる人のスキンの色をランダムに変え名前を？？？に出来る、\n自分が死亡するまで効果は継続する。\nファントムを使う前に会議に入るとマークはリセットされる。\nベントに入ることで自分にもマークをつけることができる。"
+      options: ["キルクール","ファントムクール","ベントクール", "ファントムの使用回数"]
     }
   ]
   </script>
@@ -229,6 +239,7 @@
     const TAG_COLORS = {
       "クルー": "#8cffff",
       "インポスター": "#ff1919",
+      "マッドメイト": "ff1919",
       "ニュートラル": "#969696"
     };
     const TAG_PALETTE = ["#4a90d9", "#2e9e6a", "#e08a2e", "#2aa3b8", "#c28a1f", "#d05f9c", "#6f7fd0", "#4f9d4f"];
@@ -239,7 +250,7 @@
       return TAG_PALETTE[h % TAG_PALETTE.length];
     }
 
-    const TEAMS = ["クルー", "インポスター", "第三陣営"];
+    const TEAMS = ["クルー", "インポスター", "マッドメイト", "第三陣営"];
     const list = document.getElementById('list');
     const content = document.getElementById('content');
     const search = document.getElementById('search');
