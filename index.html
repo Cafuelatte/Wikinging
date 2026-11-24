@@ -208,6 +208,16 @@
       intro: "さあ、正体不明の怪奇に怯えるがいい"
       desc: "キルボタンを押す事で対象にインポスター陣営にしか見えないマークをつけることができ、\nファントムボタンを押すことでマークのついてる人のスキンの色をランダムに変え名前を？？？に出来る、\n自分が死亡するまで効果は継続する。\nファントムを使う前に会議に入るとマークはリセットされる。\nベントに入ることで自分にもマークをつけることができる。"
       options: ["キルクール","ファントムクール","ベントクール", "ファントムの使用回数"]
+    },
+    {
+      name: "ノーリミッター"
+    　en: "Non Limiter"
+      team: "インポスター"
+      color: "#ff1919"
+      tags: ["インポスター","ネタ役職"]
+      intro: "私に制御という文字はない"
+      desc: "キルクールが早い代わりに、キルクールが明けると自動でキルします。\nキルクールが明けた時にキルできる対象がいなかった場合、自身が死亡します。"
+      options: ["キルクール"]
     }
   ]
   </script>
@@ -240,7 +250,8 @@
       "クルー": "#8cffff",
       "インポスター": "#ff1919",
       "マッドメイト": "ff1919",
-      "ニュートラル": "#969696"
+      "ニュートラル": "#969696",
+      "ネタ役職": "#ff5cf7"
     };
     const TAG_PALETTE = ["#4a90d9", "#2e9e6a", "#e08a2e", "#2aa3b8", "#c28a1f", "#d05f9c", "#6f7fd0", "#4f9d4f"];
     function tagColor(t) {
@@ -250,7 +261,7 @@
       return TAG_PALETTE[h % TAG_PALETTE.length];
     }
 
-    const TEAMS = ["クルー", "インポスター", "マッドメイト", "第三陣営"];
+    const TEAMS = ["クルー", "インポスター", "マッドメイト", "ニュートラル", "ネタ役職"];
     const list = document.getElementById('list');
     const content = document.getElementById('content');
     const search = document.getElementById('search');
